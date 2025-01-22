@@ -1,6 +1,6 @@
 package com.example.demo_redis.config;
 
-import model.Person;
+import com.example.demo_redis.model.Person;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,13 +14,13 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 public class RedisConfig {
 
-    @Value("$r{redis.host.url}")
+    @Value("${redis.host.url}")
     String host;
 
-    @Value("$r{redis.host.port}")
+    @Value("${redis.host.port}")
     Integer port;
 
-    @Value("$r{redis.auth.password}")
+    @Value("${redis.auth.password}")
     String password;
 
     @Bean

@@ -1,10 +1,10 @@
-package dto;
+package com.example.demo_redis.dto;
 
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import model.Address;
-import model.Person;
+import com.example.demo_redis.model.Address;
+import com.example.demo_redis.model.Person;
 
 import java.util.UUID;
 
