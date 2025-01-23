@@ -67,6 +67,8 @@ public class RedisConfig {
         // And takes Bytes and converts to JAVA object
         redisTemplate.setValueSerializer(new JdkSerializationRedisSerializer());
 
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashValueSerializer(new JdkSerializationRedisSerializer());
 
         return  redisTemplate;
     }

@@ -32,4 +32,37 @@ public class PersonSevice {
                 .collect(Collectors.toList());
 
     }
+    //----------------List Operations-----------------
+
+    public void lpush(Person person){
+        personRepository.lpush(person);
+    }
+
+    public void rpush(Person person){
+        personRepository.rpush(person);
+    }
+
+    public List<Person> lpop(int count){
+        return personRepository.lpop(count);
+    }
+
+    public List<Person> rpop(int count){
+        return personRepository.rpop(count);
+    }
+
+    public List<Person> lrange(int start,int end){
+        return personRepository.lrange(start,end);
+    }
+
+    //------------------Hash Ops---------------------
+
+    public void setPersonHash(Person person){
+        personRepository.hmset(person);
+    }
+
+    public Person getPersonFromHash(String person){
+        return personRepository.hgetall(person);
+    }
+
+
 }

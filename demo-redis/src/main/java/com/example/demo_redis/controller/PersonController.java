@@ -37,12 +37,48 @@ public class PersonController {
     }
 
 
-
     /*
      List Operations
      */
+    @PostMapping("/lpush")
+    public void lpush(@RequestBody @Valid PersonCreateRequest request){
+        personSevice.lpush(request.to());
+    }
+
+    @PostMapping("/rpush")
+    public void rpush(@RequestBody @Valid PersonCreateRequest request){
+        personSevice.rpush(request.to());
+    }
+
+    @DeleteMapping("/lpop")
+    public List<Person> lpop(@RequestParam(value = "count", required = false, defaultValue = "1") int count){
+        return personSevice.lpop(count);
+    }
+
+    @DeleteMapping("/rpop")
+    public List<Person> rpop(@RequestParam(value = "count", required = false, defaultValue = "1") int count){
+        return personSevice.rpop(count);
+    }
+
+    @GetMapping("/lrange")
+    public List<Person> lrange(@RequestParam(value = "start", required = false,defaultValue = "0") int start,
+                               @RequestParam(value = "end", required = false,  defaultValue ="-1") int end){
+        return personSevice.lrange(start,end);
+    }
 
     /*
      Hash Operations
      */
+
+    @PostMapping("/hash")
+    public void createPersonInHash(@RequestBody @Valid PersonCreateRequest request){
+        personSevice.setPersonHash(request.to());
+    }
+
+    @GetMapping("/hash/{personId}")
+    public Person getPersonFromHash(@PathVariable("personId") String personId){
+        return personSevice.getPersonFromHash(personId);
+    }
+
+
 }
