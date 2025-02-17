@@ -1,6 +1,8 @@
 package com.example.minor_1.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -40,11 +42,14 @@ public class Book {
     // Many books written by one author
     //Book <-> Author
     @JoinColumn
+    @JsonIgnoreProperties({"bookList"})
     // To create Foreign key column in Book table
     private Author my_author;
 
     @ManyToOne
     @JoinColumn
+    @JsonIgnoreProperties("bookList")  //Ignore nesting of books allocated to this student
+//    @JsonIgnore  // This will not print anything about student
     private Student student;
 
     @OneToMany(mappedBy = "book")
