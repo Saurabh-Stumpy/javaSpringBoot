@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class TransactionService {
@@ -81,9 +83,10 @@ public class TransactionService {
 
             book.setStudent(student);
 
-            bookService.create(book);
+            bookService.createOrUpdate(book);
 
             transaction.setTransactionStatus(TransactionStatus.SUCCESS);
+
         } catch (Exception e) {
             transaction.setTransactionStatus(TransactionStatus.FAILURE);
         }finally {
@@ -93,7 +96,75 @@ public class TransactionService {
         return transaction.getTxnId();
     }
 
-    private  String returnBook(InitiateTransactionRequest request){
-        return null;
+    private  String returnBook(InitiateTransactionRequest request) throws Exception {
+        Student student = studentService.find(request.getStudentId());
+        Admin admin = adminService.find(request.getAdminId());
+        List<Book> bookList = bookService.find("id",String.valueOf(request.getBookId()));
+
+        Book book = bookList !=null && bookList.size() >0 ? bookList.get(0) : null;
+
+        if(student == null
+                || admin == null
+                || book == null
+                || book.getStudent() == null    // If the book is assigned to someone or not
+                || book.getStudent().getId() != student.getId()){   // If tnhe book is assigned to the same student which is requesting to return the book
+            throw new Exception("Invalid Exception");
+        }
+
+        // Getting the corresponding issuance txn
+        Transaction issuanceTransaction =  transactionRepository
+                .findTopByStudentAndBookAndTransactionTypeOrderByIdDesc(student.getId()
+                        ,book.getId()
+                        ,TransactionType.ISSUE);
+
+        if(issuanceTransaction == null){
+            throw new Exception("Invalid request");
+        }
+
+        Transaction transaction = null;
+
+        try {
+
+            Integer fine = calculateFine(issuanceTransaction.getCreatedOn());
+
+            transaction = Transaction.builder()
+                    .txnId(UUID.randomUUID().toString())
+                    .student(student)
+                    .book(book)
+                    .admin(admin)
+                    .transactionType(request.getTransactionType())
+                    .transactionStatus(TransactionStatus.PENDING)
+                    .fine(fine)
+                    .build();
+
+            transactionRepository.save(transaction);
+
+            if (fine == 0) {
+                book.setStudent(null);
+                bookService.createOrUpdate(book);
+                transaction.setTransactionStatus(TransactionStatus.SUCCESS);
+            }
+        } catch (Exception e) {
+            transaction.setTransactionStatus(TransactionStatus.FAILURE);
+        }finally {
+            transactionRepository.save(transaction);
+        }
+        return transaction.getTxnId();
+
+    }
+
+    private Integer calculateFine(Date issuanceTime){
+        long issueTimeInMillis = issuanceTime.getTime();
+        long currentTimeInMillis = System.currentTimeMillis();
+
+        long diff = currentTimeInMillis - issueTimeInMillis;
+
+        long daysPassed = TimeUnit.DAYS.convert(diff,TimeUnit.MILLISECONDS);
+
+        if(daysPassed > duration){
+            return (int)(daysPassed - duration);
+        }
+        return 0;
+
     }
 }

@@ -5,7 +5,6 @@ import com.example.minor_1.models.Book;
 import com.example.minor_1.services.BookService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +17,7 @@ public class BookController {
 
     @PostMapping("/book")
     public void createBook(@RequestBody @Valid CreateBookRequest createBookRequest){
-        bookService.create(createBookRequest.to());
+        bookService.createOrUpdate(createBookRequest.to());
     }
 
     @GetMapping("/book")
