@@ -113,8 +113,8 @@ public class TransactionService {
 
         // Getting the corresponding issuance txn
         Transaction issuanceTransaction =  transactionRepository
-                .findTopByStudentAndBookAndTransactionTypeOrderByIdDesc(student.getId()
-                        ,book.getId()
+                .findTopByStudentAndBookAndTransactionTypeOrderByIdDesc(student
+                        ,book
                         ,TransactionType.ISSUE);
 
         if(issuanceTransaction == null){
@@ -165,6 +165,24 @@ public class TransactionService {
             return (int)(daysPassed - duration);
         }
         return 0;
+
+    }
+
+    public void payFine(Integer amount, Integer studentId, String txnId) throws Exception {
+        Transaction transaction = transactionRepository.findByTxnId(txnId);
+
+        Book book = transaction.getBook();
+
+        if(transaction.getFine() == amount
+                && book.getStudent() != null
+                && book.getStudent().getId() == studentId){
+            transaction.setTransactionStatus(TransactionStatus.SUCCESS);
+            book.setStudent(null);
+            bookService.createOrUpdate(book);
+            transactionRepository.save(transaction);
+        }else{
+            throw new Exception("Invalid request");
+        }
 
     }
 }

@@ -21,9 +21,10 @@ public class TransactionController {
     }
 
     @PostMapping("/transaction/payment")
-    public void makePayment(@RequestParam("amount") Double amount,
+    public void makePayment(@RequestParam("amount") Integer amount,
                             @RequestParam("studentId") Integer studentId,
-                            @RequestParam("transactionId") String txnId){
+                            @RequestParam("transactionId") String txnId) throws Exception {
+        transactionService.payFine(amount, studentId, txnId);
 
     }
 }
