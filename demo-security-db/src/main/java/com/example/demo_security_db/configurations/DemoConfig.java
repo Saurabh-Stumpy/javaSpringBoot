@@ -5,7 +5,5 @@ import org.springframework.security.web.SecurityFilterChain;
 
 public class DemoConfig {
 
-    @Bean
-    SecurityFilterChain
 
 }
