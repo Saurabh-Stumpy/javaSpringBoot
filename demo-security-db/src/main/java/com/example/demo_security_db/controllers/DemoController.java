@@ -12,19 +12,19 @@ public class DemoController {
     }
 
     // doctor
-    @GetMapping("/doctor")
+    @GetMapping("/doctor/details")
     public String doctorAPI(){
         return "Hello Doctor";
     }
 
     // deo
-    @GetMapping("/deo")
+    @GetMapping("/deo/details")
     public String deoAPI(){
         return "Hello data entry operator";
     }
 
     //ceo
-    @GetMapping("/ceo")
+    @GetMapping("/ceo/details")
     public String ceoAPI(){
         return "Hello ceo";
     }

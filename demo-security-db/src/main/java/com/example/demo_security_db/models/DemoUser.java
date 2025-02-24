@@ -1,24 +1,28 @@
-package com.example.demo_security_db.services;
+package com.example.demo_security_db.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
+import jakarta.annotation.Generated;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
+import java.util.stream.Collectors;
 
 @Builder
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class DemoUser implements UserDetails {
 
     private static final String DELIMIER = "::";
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(unique =true, nullable = false)
@@ -32,16 +36,19 @@ public class DemoUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+
+        String[] authorities = this.authorities.split(DELIMIER);
+        return Arrays.stream(authorities).map(authority -> new SimpleGrantedAuthority(authority)).collect(Collectors.toList());
     }
 
     @Override
     public String getPassword() {
-        return "";
+        return this.password;
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return this.username;
     }
+
 }
