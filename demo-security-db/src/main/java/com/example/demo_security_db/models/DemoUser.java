@@ -19,8 +19,6 @@ import java.util.stream.Collectors;
 @Entity
 public class DemoUser implements UserDetails {
 
-    private static final String DELIMIER = "::";
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -37,7 +35,7 @@ public class DemoUser implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
-        String[] authorities = this.authorities.split(DELIMIER);
+        String[] authorities = this.authorities.split(Constants.DELIMIER);
         return Arrays.stream(authorities).map(authority -> new SimpleGrantedAuthority(authority)).collect(Collectors.toList());
     }
 

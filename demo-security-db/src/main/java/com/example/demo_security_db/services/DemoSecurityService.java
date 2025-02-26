@@ -15,6 +15,10 @@ public class DemoSecurityService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return demoSecurityRepository.findByUsername(username);
+        UserDetails userDetails = demoSecurityRepository.findByUsername(username);
+        if (userDetails==null){
+            throw new UsernameNotFoundException("Please enter valid user name");
+        }
+        return userDetails;
     }
 }
