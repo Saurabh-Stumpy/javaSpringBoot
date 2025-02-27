@@ -2,10 +2,13 @@ package com.example.minor_1.controllers;
 
 
 import com.example.minor_1.dtos.CreateStudentRequest;
+import com.example.minor_1.models.SecuredUser;
 import com.example.minor_1.models.Student;
 import com.example.minor_1.services.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,7 +34,12 @@ public class StudentConroller {
 // Only for student so that they can see their own details
     @GetMapping("/student")
     public Student findStudent(){
-        return null;
+
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        SecuredUser user = (SecuredUser) authentication.getPrincipal();
+        int studentId = user.getStudent().getId();
+
+        return studentService.find(studentId);
     }
 
 }

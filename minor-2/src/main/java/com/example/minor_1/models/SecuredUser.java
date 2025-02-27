@@ -25,7 +25,7 @@ public class SecuredUser implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false)
@@ -33,11 +33,11 @@ public class SecuredUser implements UserDetails {
 
     private String authorities;
 
-    @OneToOne
+    @OneToOne(mappedBy = "securedUser")  // Won't create a foreign key column in the table by adding mapped by
     @JsonIgnoreProperties("{securedUser}")
     private Student student;
 
-    @OneToOne
+    @OneToOne(mappedBy = "securedUser")
     @JsonIgnoreProperties("{securedUser}")
     private Admin admin;
 

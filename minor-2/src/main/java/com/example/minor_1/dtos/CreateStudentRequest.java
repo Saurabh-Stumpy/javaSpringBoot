@@ -23,8 +23,10 @@ public class CreateStudentRequest {
     @Max(50)
     private Integer age;
 
+    @NotBlank
     private String username;
 
+    @NotBlank
     private String password;
 
     public Student to(){

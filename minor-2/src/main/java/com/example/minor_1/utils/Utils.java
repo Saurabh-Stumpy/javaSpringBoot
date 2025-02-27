@@ -13,7 +13,7 @@ public class Utils {
 
         List<String> studentAuthorities = Arrays.asList(Constants.STUDENT_SELF_INFO_AUTHORITY);
 
-        List<String> adminAuthorities = Arrays.asList(Constants.STUDENT_INFO_AUTHORITY);
+        List<String> adminAuthorities = Arrays.asList(Constants.STUDENT_INFO_AUTHORITY,Constants.CREATE_ADMIN_AUTHORITY);
 
         String studentAuthoritiesString = String.join(Constants.DELIMITER,studentAuthorities);
 

@@ -44,7 +44,7 @@ public class Student {
     private List<Transaction> transactionList;
 
     @OneToOne
-    @JsonIgnoreProperties("{student}")
+    @JsonIgnoreProperties({"student"})
     @JoinColumn
     private SecuredUser securedUser;
 

@@ -14,10 +14,11 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        http.authorizeHttpRequests(authz ->
+        http.csrf(csrf-> csrf.disable()).authorizeHttpRequests(authz ->
                         authz
                                 .requestMatchers(HttpMethod.GET,"/student/**").hasAuthority(Constants.STUDENT_SELF_INFO_AUTHORITY)
                                 .requestMatchers(HttpMethod.GET,"/student-by-id/**").hasAuthority(Constants.STUDENT_INFO_AUTHORITY)
+                                .requestMatchers(HttpMethod.POST,"/admin/**").hasAuthority(Constants.CREATE_ADMIN_AUTHORITY)
                                 .requestMatchers("/**").permitAll())
                 .formLogin(Customizer.withDefaults()).rememberMe(Customizer.withDefaults());
         return http.build();
