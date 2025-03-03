@@ -11,9 +11,21 @@ public class Utils {
 
         HashMap<String,String> authoritiesMap = new HashMap<>();
 
-        List<String> studentAuthorities = Arrays.asList(Constants.STUDENT_SELF_INFO_AUTHORITY);
+        List<String> studentAuthorities = Arrays.asList(
+                Constants.STUDENT_SELF_INFO_AUTHORITY,
+                Constants.READ_BOOK_AUTHORITY,
+                Constants.MAKE_PAYMENT_AUTHORITY
+        );
 
-        List<String> adminAuthorities = Arrays.asList(Constants.STUDENT_INFO_AUTHORITY,Constants.CREATE_ADMIN_AUTHORITY);
+        List<String> adminAuthorities = Arrays.asList(
+                Constants.STUDENT_INFO_AUTHORITY,
+                Constants.CREATE_ADMIN_AUTHORITY,
+                Constants.CREATE_BOOK_AUTHORITY,
+                Constants.DELETE_BOOK_AUTHORITY,
+                Constants.UPDATE_BOOK_AUTHORITY,
+                Constants.READ_BOOK_AUTHORITY,
+                Constants.INITIATE_TRANSACTION_AUTHORITY
+        );
 
         String studentAuthoritiesString = String.join(Constants.DELIMITER,studentAuthorities);
 

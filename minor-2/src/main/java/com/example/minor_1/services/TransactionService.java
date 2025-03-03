@@ -34,7 +34,7 @@ public class TransactionService {
     @Value("${student.allowed.duration}")
     Integer duration;
 
-    public String initiateTxn(InitiateTransactionRequest request) throws Exception {
+    public String initiateTxn(InitiateTransactionRequest request, Integer adminId) throws Exception {
 
         /*
         * Issue
@@ -51,12 +51,12 @@ public class TransactionService {
         * 4. If there is no fine then de-allocate the book from the
         *    student name (book table).
         */
-        return request.getTransactionType() == TransactionType.ISSUE ? issuance(request) : returnBook(request);
+        return request.getTransactionType() == TransactionType.ISSUE ? issuance(request, adminId) : returnBook(request, adminId);
     }
 
-    private String issuance(InitiateTransactionRequest request) throws Exception {
+    private String issuance(InitiateTransactionRequest request, Integer adminId) throws Exception {
         Student student = studentService.find(request.getStudentId());
-        Admin admin = adminService.find(request.getAdminId());
+        Admin admin = adminService.find(adminId);
         List<Book> bookList = bookService.find("id",String.valueOf(request.getBookId()));
 
         Book book = bookList !=null && bookList.size() >0 ? bookList.get(0) : null;
@@ -96,9 +96,9 @@ public class TransactionService {
         return transaction.getTxnId();
     }
 
-    private  String returnBook(InitiateTransactionRequest request) throws Exception {
+    private  String returnBook(InitiateTransactionRequest request, Integer adminId) throws Exception {
         Student student = studentService.find(request.getStudentId());
-        Admin admin = adminService.find(request.getAdminId());
+        Admin admin = adminService.find(adminId);
         List<Book> bookList = bookService.find("id",String.valueOf(request.getBookId()));
 
         Book book = bookList !=null && bookList.size() >0 ? bookList.get(0) : null;

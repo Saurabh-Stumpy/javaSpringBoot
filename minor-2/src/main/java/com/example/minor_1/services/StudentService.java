@@ -2,6 +2,7 @@ package com.example.minor_1.services;
 
 import com.example.minor_1.models.SecuredUser;
 import com.example.minor_1.models.Student;
+import com.example.minor_1.repositories.StudentCacheRepository;
 import com.example.minor_1.repositories.StudentRepository;
 import com.example.minor_1.repositories.UserRepository;
 import com.example.minor_1.utils.Constants;
@@ -17,6 +18,9 @@ public class StudentService {
     @Autowired
     UserService userService;
 
+    @Autowired
+    StudentCacheRepository studentCacheRepository;
+
 
     public void create(Student student) {
         SecuredUser securedUser = student.getSecuredUser();
@@ -28,6 +32,11 @@ public class StudentService {
     }
 
     public Student find(int studentId) {
+
+        Student student = studentCacheRepository.get(studentId);
+
+        if (student == null)
+
         return studentRepository.findById(studentId).orElse(null);
     }
 }

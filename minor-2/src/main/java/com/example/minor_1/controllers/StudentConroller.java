@@ -10,8 +10,11 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
 
 @RestController
 public class StudentConroller {
@@ -31,11 +34,17 @@ public class StudentConroller {
     public Student findStudentById(@PathVariable("id") int studentId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         SecuredUser securedUser = (SecuredUser) authentication.getPrincipal();
-        boolean isCalledByAdmin = securedUser.getAuthorities().stream().anyMatch(x-> Constants.STUDENT_INFO_AUTHORITY==x.getAuthority());
 
-        if (isCalledByAdmin){
-            return studentService.find(studentId);
+
+        for (GrantedAuthority grantedAuthority: securedUser.getAuthorities()){
+            String[] authorities  = grantedAuthority.getAuthority().split(Constants.DELIMITER);
+            boolean isCalledByAdmin = Arrays.stream(authorities).sequential().anyMatch(x-> Constants.STUDENT_INFO_AUTHORITY.equals(x));
+
+            if (isCalledByAdmin){
+                return studentService.find(studentId);
+            }
         }
+
         throw new AuthorizationServiceException("User not authorized to do this!");
 
     }

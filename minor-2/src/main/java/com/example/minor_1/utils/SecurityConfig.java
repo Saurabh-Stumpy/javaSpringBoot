@@ -19,6 +19,10 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET,"/student/**").hasAuthority(Constants.STUDENT_SELF_INFO_AUTHORITY)
                                 .requestMatchers(HttpMethod.GET,"/student-by-id/**").hasAuthority(Constants.STUDENT_INFO_AUTHORITY)
                                 .requestMatchers(HttpMethod.POST,"/admin/**").hasAuthority(Constants.CREATE_ADMIN_AUTHORITY)
+                                .requestMatchers(HttpMethod.GET,"/book/**").hasAuthority(Constants.READ_BOOK_AUTHORITY)
+                                .requestMatchers(HttpMethod.POST,"/book/**").hasAuthority(Constants.CREATE_BOOK_AUTHORITY)
+                                .requestMatchers("/transaction/payment/**").hasAuthority(Constants.MAKE_PAYMENT_AUTHORITY)
+                                .requestMatchers("transaction/**").hasAuthority(Constants.INITIATE_TRANSACTION_AUTHORITY)
                                 .requestMatchers("/**").permitAll())
                 .formLogin(Customizer.withDefaults()).rememberMe(Customizer.withDefaults());
         return http.build();
