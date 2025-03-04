@@ -4,7 +4,6 @@ import com.example.minor_1.models.SecuredUser;
 import com.example.minor_1.models.Student;
 import com.example.minor_1.repositories.StudentCacheRepository;
 import com.example.minor_1.repositories.StudentRepository;
-import com.example.minor_1.repositories.UserRepository;
 import com.example.minor_1.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,9 +33,14 @@ public class StudentService {
     public Student find(int studentId) {
 
         Student student = studentCacheRepository.get(studentId);
+        if(student != null){
+            return student;
+        }
+            student = studentRepository.findById(studentId).orElse(null);
+        if (student != null){
+            studentCacheRepository.set(student);
+        }
 
-        if (student == null)
-
-        return studentRepository.findById(studentId).orElse(null);
+        return student;
     }
 }

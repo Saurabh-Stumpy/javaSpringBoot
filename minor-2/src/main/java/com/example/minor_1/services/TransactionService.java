@@ -104,10 +104,10 @@ public class TransactionService {
         Book book = bookList !=null && bookList.size() >0 ? bookList.get(0) : null;
 
         if(student == null
-                || admin == null
+                || admin == null  
                 || book == null
                 || book.getStudent() == null    // If the book is assigned to someone or not
-                || book.getStudent().getId() != student.getId()){   // If tnhe book is assigned to the same student which is requesting to return the book
+                || !book.getStudent().getId().equals(student.getId())){   // If tnhe book is assigned to the same student which is requesting to return the book
             throw new Exception("Invalid Exception");
         }
 
