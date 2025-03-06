@@ -2,15 +2,15 @@ package com.example.minor_1.controllers;
 
 import com.example.minor_1.dtos.InitiateTransactionRequest;
 import com.example.minor_1.models.SecuredUser;
+import com.example.minor_1.models.Transaction;
 import com.example.minor_1.services.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class TransactionController {
@@ -38,5 +38,11 @@ public class TransactionController {
 
         transactionService.payFine(amount, studentId, txnId);
 
+    }
+
+    @GetMapping("/transaction")
+    public List<Transaction> allTransactions(){
+
+        return null;
     }
 }
