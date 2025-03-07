@@ -34,6 +34,10 @@ public class TransactionService {
     @Value("${student.allowed.duration}")
     Integer duration;
 
+    public List<Transaction> getAllTransactions(){
+        return transactionRepository.findAll();
+    }
+
     public String initiateTxn(InitiateTransactionRequest request, Integer adminId) throws Exception {
 
         /*

@@ -42,7 +42,6 @@ public class TransactionController {
 
     @GetMapping("/transaction")
     public List<Transaction> allTransactions(){
-
-        return null;
+        return transactionService.getAllTransactions();
     }
 }
