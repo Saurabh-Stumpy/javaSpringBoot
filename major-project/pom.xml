@@ -24,7 +24,8 @@
     <modules>
         <module>user-sevice</module>
 		<module>wallet-service</module>
-	</modules>
+        <module>transaction-service</module>
+    </modules>
     <scm>
 		<connection/>
 		<developerConnection/>

@@ -30,7 +30,6 @@ public class UserService {
 
         JSONObject userObj = new JSONObject();
         userObj.put("phone",user.getPhone());
-        userObj.put("userId",user.getId());
         userObj.put("email",user.getEmail());
 
         kafkaTemplate
@@ -45,9 +44,13 @@ public class UserService {
         if (user != null){
             return user;
         }
-        return userRepository
+        user = userRepository
                 .findById(userId)
                 .orElseThrow(() -> new Exception());
+
+        userCacheRepository.set(user);
+
+        return user;
     }
 
 }
