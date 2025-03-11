@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.dto.TransactionCreateRequest;
 import com.example.service.TransactionService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +16,7 @@ public class TransactionController {
     TransactionService transactionService;
 
     @PostMapping("/transaction")
-    public String transact(@RequestBody @Valid TransactionCreateRequest request){
-
+    public String transact(@RequestBody @Valid TransactionCreateRequest request) throws JsonProcessingException {
+        return transactionService.transact(request);
     }
 }

@@ -5,6 +5,8 @@ import com.example.dto.TransactionCreateRequest;
 import com.example.models.Transaction;
 import com.example.models.TransactionStatus;
 import com.example.repository.TransactionRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import netscape.javascript.JSObject;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +25,11 @@ public class TransactionService {
     @Autowired
     KafkaTemplate<String,String> kafkaTemplate;
 
+    private ObjectMapper objectMapper = new ObjectMapper();
+
     private static final String TRANSACTION_CREATED = "transaction_created";
 
-    public String transact(TransactionCreateRequest request){
+    public String transact(TransactionCreateRequest request) throws JsonProcessingException {
         Transaction transaction = Transaction.builder()
                 .senderId(request.getSender())
                 .receiverId(request.getReceiver())
@@ -39,12 +43,12 @@ public class TransactionService {
 
         JSONObject obj = new JSONObject();
 
-        obj.put("sender", transaction.getSenderId());
+        obj.put("senderId", transaction.getSenderId());
         obj.put("receiverId",transaction.getReceiverId());
         obj.put("amount",transaction.getAmount());
         obj.put("transactionId",transaction.getExternalId());
 
-        kafkaTemplate.send(TRANSACTION_CREATED,obj.toString());
+        kafkaTemplate.send(TRANSACTION_CREATED,objectMapper.writeValueAsString(obj));
 
         return transaction.getExternalId();
     }
