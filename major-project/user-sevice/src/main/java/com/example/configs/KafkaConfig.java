@@ -3,6 +3,7 @@ package com.example.configs;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -13,6 +14,7 @@ import java.util.Properties;
 @Configuration
 public class KafkaConfig {
 
+    @Bean
     ProducerFactory getProducerFactory(){
 
         Properties properties = new Properties();
@@ -23,6 +25,7 @@ public class KafkaConfig {
         return new DefaultKafkaProducerFactory(properties);
     }
 
+    @Bean
     KafkaTemplate<String,String> getKafkaTemplate(){
         return new KafkaTemplate<>(getProducerFactory());
     }

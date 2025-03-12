@@ -69,28 +69,72 @@ public class WalletService {
         Long amount = (Long) obj.get("amount");
         String transactionId = (String) obj.get("transactionId");
 
-        Wallet senderWallet = walletRepository.findByWalletId(senderWalletId);
-        Wallet receiverWallet = walletRepository.findByWalletId(receiverWalletId);
+        try {
 
-        if (senderWallet==null || receiverWallet == null || senderWallet.getBalance()  < amount){
+            Wallet senderWallet = walletRepository.findByWalletId(senderWalletId);
+            Wallet receiverWallet = walletRepository.findByWalletId(receiverWalletId);
 
-            obj = new JSONObject();
-            obj.put("transactionId", transactionId);
-            obj.put("status","Failed");
-            obj.put("senderWalletId", senderWalletId);
-            obj.put("receiverWalletId", receiverWallet);
-            obj.put("amount", amount);
-            obj.put("senderWalletBalance", senderWallet == null ?  0: senderWallet.getBalance());
+            if (senderWallet == null || receiverWallet == null || senderWallet.getBalance() < amount) {
+
+                obj = this.init(
+                        receiverWalletId
+                        ,senderWalletId
+                        ,amount
+                        ,transactionId
+                        ,"FAILED");
+                obj.put("senderWalletBalance", senderWallet == null ? 0 : senderWallet.getBalance());
+
+                kafkaTemplate
+                        .send(WALLET_UPDATED_TOPIC, objectMapper
+                                .writeValueAsString(obj)
+                        );
+                return;
+            }
+
+            walletRepository.updateWallet(senderWalletId, -amount);
+            walletRepository.updateWallet(receiverWalletId, amount);
+
+            obj = this.init(
+                    receiverWalletId
+                    ,senderWalletId
+                    ,amount
+                    ,transactionId
+                    ,"SUCCESS");
 
             kafkaTemplate
-                    .send(WALLET_UPDATED_TOPIC,objectMapper
+                    .send(WALLET_UPDATED_TOPIC, objectMapper
+                            .writeValueAsString(obj)
+                    );
+
+        }catch (Exception e){
+            obj = this.init(
+                    receiverWalletId
+                    ,senderWalletId
+                    ,amount
+                    ,transactionId
+                    ,"FAILED"
+            );
+            obj.put("ErrorMsg",e.getMessage());
+//            obj.put("senderWalletBalance", senderWallet == null ? 0 : senderWallet.getBalance());
+
+            kafkaTemplate
+                    .send(WALLET_UPDATED_TOPIC, objectMapper
                             .writeValueAsString(obj)
                     );
             return;
         }
+    }
+    private JSONObject init(String receiverId, String senderId, Long amount,String transactionId, String status){
+        JSONObject obj = new JSONObject();
+        obj = new JSONObject();
+        obj.put("transactionId", transactionId);
+        obj.put("status", "Failed");
+        obj.put("senderWalletId", senderId);
+        obj.put("receiverWalletId", receiverId);
+        obj.put("amount", amount);
+        obj.put("status", status);
 
-       walletRepository.updateWallet(senderWalletId, 0-amount);
-       walletRepository.updateWallet(receiverWalletId, amount);
+        return obj;
 
     }
 
