@@ -25,4 +25,9 @@ public class UserController {
     public User getUser(@PathVariable("userId") int userId) throws Exception {
         return userService.get(userId);
     }
+
+    @GetMapping("/user/phone/{phone}")
+    public User getUserByPhone(@PathVariable("phone") String phone) throws Exception {
+        return userService.getByPhone(phone);
+    }
 }
