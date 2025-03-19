@@ -23,7 +23,7 @@ public class EmailConfig {
         javaMailSender.setHost("smtp.gmail.com");
         javaMailSender.setPort(587);
         javaMailSender.setUsername("ewallet.noreply.stumpy@gmail.com");
-        javaMailSender.setPassword("Saurabh@123");
+        javaMailSender.setPassword("*******");
 
         Properties properties = javaMailSender.getJavaMailProperties();
         properties.put("mail.debug",true);
