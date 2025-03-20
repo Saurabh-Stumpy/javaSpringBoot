@@ -15,6 +15,8 @@ public class NotificationService {
 
     private static final String TRANSACTION_COMPLETED_TOPIC = "transaction_completed";
 
+    private static final String temp = "";
+
     @Autowired
     SimpleMailMessage simpleMailMessage;
 
